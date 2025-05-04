@@ -1,0 +1,4 @@
+/opt/lampp/bin/php artisan serve
+
+http://localhost/phpmyadmin
+sudo /opt/lampp/lampp restart

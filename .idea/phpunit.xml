@@ -5,6 +5,8 @@
       <list>
         <option value="$PROJECT_DIR$/mytask/tests/Unit" />
         <option value="$PROJECT_DIR$/mytask/tests/Feature" />
+        <option value="$PROJECT_DIR$/userform_project/tests/Unit" />
+        <option value="$PROJECT_DIR$/userform_project/tests/Feature" />
       </list>
     </option>
   </component>
