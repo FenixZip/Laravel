@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\FormProcessor;
@@ -9,6 +10,9 @@ use App\Http\Controllers\BookController;
 use App\Models\Employee;
 use App\Models\News;
 use App\Events\NewsHidden;
+use App\Mail\Welcome;
+use App\Models\User;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,3 +85,23 @@ Route::get('/news/{id}/hide', function ($id) {
     NewsHidden::dispatch($news);
     return 'Новость скрыта и событие вызвано.';
 });
+
+// 📬 Тестовая отправка письма
+Route::get('/test-mail', function () {
+    $user = User::first();
+    Mail::to($user->email)->send(new Welcome($user));
+    return 'Письмо отправлено на ' . $user->email;
+});
+
+// 💬 Тестовая отправка сообщения в Telegram
+Route::get('/test-telegram', function () {
+    Telegram::sendMessage([
+        'chat_id' => env('TELEGRAM_CHANNEL_ID', ''),
+        'parse_mode' => 'html',
+        'text' => 'Произошло тестовое событие'
+    ]);
+    return response()->json(['status' => 'success']);
+});
+
+// 🌐 Аутентификация (Breeze)
+require __DIR__.'/auth.php';
