@@ -1,29 +1,48 @@
-<!-- resources/views/form.blade.php -->
+@extends('layouts.default')
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма регистрации</title>
-</head>
-<body>
-<h1>Форма регистрации</h1>
+@section('content')
+    <h2>Добавить новую книгу</h2>
 
-<!-- Форма для ввода данных пользователя -->
-<form action="/store_form" method="POST">
-    @csrf  <!-- Защита от CSRF атак -->
+    {{-- Вывод ошибок валидации --}}
+    @if ($errors->any())
+        <div style="background-color: #fdd; border: 1px solid #f99; padding: 10px; margin-bottom: 20px;">
+            <strong>Ошибки при заполнении формы:</strong>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-    <label for="first_name">Имя:</label>
-    <input type="text" name="first_name" id="first_name" required><br><br>
+    {{-- Сообщение об успехе --}}
+    @if (session('success'))
+        <div style="background-color: #dfd; border: 1px solid #9f9; padding: 10px; margin-bottom: 20px;">
+            {{ session('success') }}
+        </div>
+    @endif
 
-    <label for="last_name">Фамилия:</label>
-    <input type="text" name="last_name" id="last_name" required><br><br>
+    {{-- Форма --}}
+    <form method="POST" action="{{ route('book.store') }}">
+        @csrf
 
-    <label for="email">Email:</label>
-    <input type="email" name="email" id="email" required><br><br>
+        <label for="title">Название книги:</label><br>
+        <input type="text" id="title" name="title" value="{{ old('title') }}" required><br><br>
 
-    <button type="submit">Отправить</button>
-</form>
-</body>
-</html>
+        <label for="author">Автор:</label><br>
+        <input type="text" id="author" name="author" value="{{ old('author') }}" required><br><br>
+
+        <label for="genre">Жанр:</label><br>
+        <select id="genre" name="genre" required>
+            <option value="">-- выберите жанр --</option>
+            <option value="Фантастика" {{ old('genre') == 'Фантастика' ? 'selected' : '' }}>Фантастика</option>
+            <option value="Детектив" {{ old('genre') == 'Детектив' ? 'selected' : '' }}>Детектив</option>
+            <option value="Роман" {{ old('genre') == 'Роман' ? 'selected' : '' }}>Роман</option>
+            <option value="Научная литература" {{ old('genre') == 'Научная литература' ? 'selected' : '' }}>Научная
+                литература
+            </option>
+        </select><br><br>
+
+        <button type="submit">Сохранить книгу</button>
+    </form>
+@endsection
