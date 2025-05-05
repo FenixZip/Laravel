@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormProcessor;
+use App\Http\Controllers\EmployeeController;
 use App\Models\Employee;
 
 /*
@@ -9,18 +10,17 @@ use App\Models\Employee;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Здесь вы можете зарегистрировать веб-роуты для вашего приложения.
-| Эти роуты загружаются в файл RouteServiceProvider, который является
-| частью вашего приложения. Путь, который вы зададите здесь,
-| будет использоваться для вызова соответствующих методов контроллеров.
+| Здесь вы можете зарегистрировать веб-маршруты для вашего приложения.
+| Эти маршруты загружаются RouteServiceProvider и все они будут
+| назначены к группе middleware "web". Создавайте с радостью!
 |
 */
 
-// Страница формы
-Route::get('/userform', [FormProcessor::class, 'index']); // Роут для вывода формы (метод GET)
-Route::post('/store_form', [FormProcessor::class, 'store']); // Роут для обработки формы (метод POST)
+// 📄 Форма пользователя
+Route::get('/userform', [FormProcessor::class, 'index']);
+Route::post('/store_form', [FormProcessor::class, 'store']);
 
-// Тестовая вставка сотрудника в базу
+// 🧪 Тест добавления сотрудника в БД
 Route::get('/test_database', function () {
     $employee = new Employee();
     $employee->first_name = 'John';
@@ -31,7 +31,7 @@ Route::get('/test_database', function () {
     return 'Employee created successfully!';
 });
 
-// Главная страница с динамическими данными (шаблон home)
+// 🏠 Главная страница
 Route::get('/', function () {
     return view('home', [
         'name' => 'Alex',
@@ -41,7 +41,7 @@ Route::get('/', function () {
     ]);
 });
 
-// Страница контактов с динамическими данными (шаблон contacts)
+// 📞 Контактная страница
 Route::get('/contacts', function () {
     return view('contacts', [
         'address' => '456 Contact Ave',
@@ -50,3 +50,14 @@ Route::get('/contacts', function () {
         'phone' => '+1 234 567 890'
     ]);
 });
+
+// 👤 Работа с сотрудниками через Request
+
+// Отображение формы добавления сотрудника
+Route::get('/employee/create', [EmployeeController::class, 'index'])->name('employee.create');
+
+// Обработка отправки формы
+Route::post('/employee/store', [EmployeeController::class, 'store'])->name('employee.store');
+
+// Обновление по ID (принимает id из URL)
+Route::post('/employee/update/{id}', [EmployeeController::class, 'update'])->name('employee.update');
