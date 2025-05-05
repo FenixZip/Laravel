@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\FormProcessor;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookController;
 use App\Models\Employee;
-use App\Models\Log;
 use App\Models\News;
 use App\Events\NewsHidden;
 
@@ -16,18 +16,12 @@ use App\Events\NewsHidden;
 |--------------------------------------------------------------------------
 */
 
-// 📄 Логи
-Route::get('/logs', function () {
-    $logs = Log::orderBy('id', 'desc')->take(100)->get();
-    return view('logs', compact('logs'));
-});
-
 // 📄 Пользовательская форма
 Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
 Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
 
 // 📄 Получение пользователей
-Route::get('/users', [UserController::class, 'index'])->name('user.index');
+Route::get('/users', [UsersController::class, 'index'])->middleware(['auth'])->name('users.index');
 Route::get('/users/{id}', [UserController::class, 'show'])->name('user.show');
 
 // 🧾 Прежние задания
@@ -39,7 +33,6 @@ Route::get('/test_database', function () {
     $employee->last_name = 'Doe';
     $employee->email = 'john.doe@example.com';
     $employee->save();
-
     return 'Employee created successfully!';
 });
 
@@ -86,6 +79,5 @@ Route::get('/news/{id}/hide', function ($id) {
     $news->save();
 
     NewsHidden::dispatch($news);
-
     return 'Новость скрыта и событие вызвано.';
 });
