@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\FormProcessor;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookController;
@@ -10,16 +11,19 @@ use App\Models\Employee;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Здесь вы можете зарегистрировать веб-маршруты для вашего приложения.
-|
 */
 
-// 📄 Форма для пользователя
+// 📄 Пользовательская форма
+Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
+
+// 📄 Получение пользователей
+Route::get('/users', [UserController::class, 'index'])->name('user.index');
+Route::get('/users/{id}', [UserController::class, 'show'])->name('user.show');
+
+// 🧾 Прежние задания:
 Route::get('/userform', [FormProcessor::class, 'index']);
 Route::post('/store_form', [FormProcessor::class, 'store']);
-
-// 🧪 Тест добавления сотрудника в БД
 Route::get('/test_database', function () {
     $employee = new Employee();
     $employee->first_name = 'John';
@@ -30,7 +34,7 @@ Route::get('/test_database', function () {
     return 'Employee created successfully!';
 });
 
-// 🏠 Главная страница
+// Blade-примеры
 Route::get('/', function () {
     return view('home', [
         'name' => 'Alex',
@@ -39,8 +43,6 @@ Route::get('/', function () {
         'address' => '123 Blade Street'
     ]);
 });
-
-// 📞 Контактная страница
 Route::get('/contacts', function () {
     return view('contacts', [
         'address' => '456 Contact Ave',
@@ -50,11 +52,11 @@ Route::get('/contacts', function () {
     ]);
 });
 
-// 👤 Работа с Employee через Request
+// Employee Request routes
 Route::get('/employee/create', [EmployeeController::class, 'index'])->name('employee.create');
 Route::post('/employee/store', [EmployeeController::class, 'store'])->name('employee.store');
 Route::post('/employee/update/{id}', [EmployeeController::class, 'update'])->name('employee.update');
 
-// 📚 Работа с книгами (BookController)
+// Book form routes
 Route::get('/index', [BookController::class, 'index'])->name('book.index');
 Route::post('/store', [BookController::class, 'store'])->name('book.store');
