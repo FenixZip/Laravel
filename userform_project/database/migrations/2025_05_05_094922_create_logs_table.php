@@ -7,24 +7,21 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Создание таблицы users.
+     * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
-            $table->string('surname', 50);
-            $table->string('email')->unique();
             $table->timestamps();
         });
     }
 
     /**
-     * Откат миграции — удаление таблицы users.
+     * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('logs');
     }
 };
