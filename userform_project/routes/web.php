@@ -6,12 +6,19 @@ use App\Http\Controllers\FormProcessor;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookController;
 use App\Models\Employee;
+use App\Models\Log; // ✅ добавлен импорт модели Log
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 */
+
+// 📄 Логи посещений
+Route::get('/logs', function () {
+    $logs = Log::orderBy('id', 'desc')->take(100)->get(); // последние 100 логов
+    return view('logs', compact('logs'));
+});
 
 // 📄 Пользовательская форма
 Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
@@ -24,6 +31,7 @@ Route::get('/users/{id}', [UserController::class, 'show'])->name('user.show');
 // 🧾 Прежние задания:
 Route::get('/userform', [FormProcessor::class, 'index']);
 Route::post('/store_form', [FormProcessor::class, 'store']);
+
 Route::get('/test_database', function () {
     $employee = new Employee();
     $employee->first_name = 'John';
@@ -43,6 +51,7 @@ Route::get('/', function () {
         'address' => '123 Blade Street'
     ]);
 });
+
 Route::get('/contacts', function () {
     return view('contacts', [
         'address' => '456 Contact Ave',
