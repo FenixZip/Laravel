@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormProcessor;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\BookController;
 use App\Models\Employee;
 
 /*
@@ -11,12 +12,10 @@ use App\Models\Employee;
 |--------------------------------------------------------------------------
 |
 | Здесь вы можете зарегистрировать веб-маршруты для вашего приложения.
-| Эти маршруты загружаются RouteServiceProvider и все они будут
-| назначены к группе middleware "web". Создавайте с радостью!
 |
 */
 
-// 📄 Форма пользователя
+// 📄 Форма для пользователя
 Route::get('/userform', [FormProcessor::class, 'index']);
 Route::post('/store_form', [FormProcessor::class, 'store']);
 
@@ -51,13 +50,11 @@ Route::get('/contacts', function () {
     ]);
 });
 
-// 👤 Работа с сотрудниками через Request
-
-// Отображение формы добавления сотрудника
+// 👤 Работа с Employee через Request
 Route::get('/employee/create', [EmployeeController::class, 'index'])->name('employee.create');
-
-// Обработка отправки формы
 Route::post('/employee/store', [EmployeeController::class, 'store'])->name('employee.store');
-
-// Обновление по ID (принимает id из URL)
 Route::post('/employee/update/{id}', [EmployeeController::class, 'update'])->name('employee.update');
+
+// 📚 Работа с книгами (BookController)
+Route::get('/index', [BookController::class, 'index'])->name('book.index');
+Route::post('/store', [BookController::class, 'store'])->name('book.store');
